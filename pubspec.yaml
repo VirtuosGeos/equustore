@@ -1,19 +1,25 @@
 name: equustore
-description: "A new Flutter project."
+description: "Sistema de facturación moderno."
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.10.7
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-
+  # Dependencias clave
+  google_fonts: ^6.1.0
+  flutter_riverpod: ^2.4.0
+  lucide_icons: ^0.257.0
+  bitsdojo_window: ^0.1.6
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  # CORREGIDO: Bajamos de 6.0.0 a 2.0.0 para evitar errores de resolución
+  flutter_lints: ^2.0.0 
 
 flutter:
   uses-material-design: true
