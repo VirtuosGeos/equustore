@@ -27,7 +27,6 @@ class AppTheme {
         primary: primary,
         secondary: accent,
         surface: surface,
-        background: background,
       ),
       
       // Configuración de Tipografía (Se mantiene la estética técnica)
@@ -61,7 +60,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(4),
           borderSide: const BorderSide(color: primary, width: 2), // Borde verde brillante al enfocar
         ),
-        labelStyle: TextStyle(color: textMed),
+        labelStyle: const TextStyle(color: textMed),
         floatingLabelStyle: const TextStyle(color: primary), // El texto flota en verde
         prefixIconColor: primary.withOpacity(0.8),
         suffixIconColor: primary.withOpacity(0.8),

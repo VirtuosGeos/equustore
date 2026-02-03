@@ -1,26 +1,31 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart'; // Importante
+import 'package:window_manager/window_manager.dart'; // <--- NUEVO IMPORT
 import 'core/theme/app_theme.dart';
 import 'presentation/splash/splash_screen.dart';
-import 'package:equustore/core/utils/platform_utils.dart';
 
-void main() {
+  // Configuración de la ventana
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(1280, 720), // Tamaño inicial
+    // --- LÍMITE MÍNIMO DE SEGURIDAD ---
+    minimumSize: Size(1024, 768), // El usuario no podrá encogerla menos que esto
+    // ----------------------------------
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const ProviderScope(child: MainApp()));
-
-  // Solo ejecutar configuración de ventana si es Desktop
-  if (isDesktop) {
-    doWhenWindowReady(() {
-      final win = appWindow;
-      const initialSize = Size(1280, 720);
-      win.minSize = const Size(1024, 768);
-      win.size = initialSize;
-      win.alignment = Alignment.center;
-      win.title = "EquuStore POS";
-      win.show();
-    });
-  }
 }
 
 class MainApp extends StatelessWidget {
