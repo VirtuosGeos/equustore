@@ -1,210 +1,163 @@
-// lib/presentation/auth/login_screen.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:equustore/core/theme/app_theme.dart';
+import 'package:equustore/core/utils/platform_utils.dart';
 import '../widgets/custom_title_bar.dart';
+import '../widgets/velyth_background.dart'; // Importamos el fondo
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// Usamos SingleTickerProviderStateMixin para el controlador de animación
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-
-    // 1. Configuración del controlador principal
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200), // Duración total de la entrada
-    );
-
-    // 2. Definir la animación de desvanecimiento (Opacidad de 0 a 1)
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-
-    // 3. Definir la animación de desplazamiento (Se mueve de abajo hacia arriba)
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1), // Empieza un 10% más abajo
-      end: Offset.zero, // Termina en su posición original
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-
-    // Iniciar la animación al cargar la pantalla
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _controller.forward();
   }
 
   @override
-  void dispose() {
-    _controller.dispose(); // Limpiar el controlador para evitar fugas de memoria
-    super.dispose();
-  }
-
- @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Quitamos el AppBar nativo si hubiera
-      body: Column(
-        children: [
-          // AQUI PONEMOS NUESTRA BARRA PERSONALIZADA
-          const CustomTitleBar(),
-          
-          // El resto del contenido llena el espacio sobrante
-          Expanded(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                // ... (El resto de tu código del Login sigue igual aquí adentro)
-                child: Center(
-                  child: SingleChildScrollView(
-                    // ... el contenido de tu login anterior ...
-                    child: Padding(
-                       padding: const EdgeInsets.all(24.0),
-                       child: Column(
-                         // ... tus widgets de login ...
-                         children: [
-                            _buildHeader(context),
-                            const SizedBox(height: 40),
-                            _buildLoginCard(context),
-                            const SizedBox(height: 40),
-                            _buildFooter(context),
-                         ]
-                       )
+      body: VelythBackground( // Usamos nuestro fondo nuevo
+        child: Column(
+          children: [
+            if (isDesktop) const CustomTitleBar(),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildBrandHeader(context),
+                          const SizedBox(height: 50),
+                          _buildGlassCard(context),
+                          const SizedBox(height: 40),
+                          _buildTechFooter(context),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // He separado los widgets en métodos para mantener el código limpio
-
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildBrandHeader(BuildContext context) {
     return Column(
       children: [
+        // Icono Abstracto
+        Icon(Icons.hexagon_outlined, size: 60, color: AppTheme.primary),
+        const SizedBox(height: 10),
         Text(
           'EQUUSTORE',
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-            letterSpacing: 2.0,
-            shadows: [
-              Shadow(
-                color: AppTheme.primaryColor.withOpacity(0.5),
-                blurRadius: 20,
-                offset: const Offset(0, 0),
-              ),
-            ],
-          ),
+          style: Theme.of(context).textTheme.displayLarge, 
         ),
         Text(
-          'COFFEE & MARKET',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: AppTheme.primaryColor,
-            letterSpacing: 4.0,
-          ),
+          'POS SYSTEM /// V.1.0',
+          style: Theme.of(context).textTheme.labelLarge, // Estilo monoespaciado
         ),
       ],
     );
   }
 
-  Widget _buildLoginCard(BuildContext context) {
-    return Container(
-      width: 400, // Ancho fijo para escritorio
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceColor,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+  Widget _buildGlassCard(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Efecto Cristal
+        child: Container(
+          width: 420, // Un poco más ancho para desktop
+          padding: const EdgeInsets.all(40),
+          decoration: BoxDecoration(
+            color: AppTheme.surface.withOpacity(0.6), // Fondo semitransparente
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 20,
+                spreadRadius: 5,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Bienvenido',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 30),
-          
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Usuario',
-              prefixIcon: Icon(Icons.person_outline),
-            ),
-          ),
-          const SizedBox(height: 20),
-          
-          TextFormField(
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Contraseña',
-              prefixIcon: Icon(Icons.lock_outline),
-            ),
-          ),
-          const SizedBox(height: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('ACCESS CONTROL', 
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Colors.white54
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              
+              TextFormField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'OPERATOR ID',
+                  prefixIcon: Icon(Icons.qr_code_2), // Icono más técnico
+                ),
+              ),
+              const SizedBox(height: 20),
+              
+              TextFormField(
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'SECURITY KEY',
+                  prefixIcon: Icon(Icons.password),
+                ),
+              ),
+              const SizedBox(height: 40),
 
-          ElevatedButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Iniciando sesión...')),
-              );
-            },
-            child: const Text('INICIAR SESIÓN'),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('INITIALIZE SESSION'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildFooter(BuildContext context) {
+  Widget _buildTechFooter(BuildContext context) {
     return Column(
       children: [
         Text(
-          'Powered by',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.white30,
-          ),
+          'SECURED BY',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
         ),
         const SizedBox(height: 4),
-        // AQUI ESTÁ TU MARCA CON UN ESTILO TECH
-        Text(
-          'VELYTH TECHNOLOGIES CORE',
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppTheme.secondaryColor, // Usamos el color secundario
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'v0.1.0 Beta',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.white30,
-            fontSize: 10,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.security, size: 14, color: AppTheme.primary),
+            const SizedBox(width: 6),
+            Text(
+              'VELYTH TECHNOLOGIES CORE',
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Colors.white,
+                letterSpacing: 2.0,
+              ),
+            ),
+          ],
         ),
       ],
     );

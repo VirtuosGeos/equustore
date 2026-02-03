@@ -1,7 +1,7 @@
-// lib/presentation/splash/splash_screen.dart
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../auth/login_screen.dart';
+import '../widgets/velyth_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
 
-    // 1. Configuración de la animación del logo
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -35,10 +34,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _controller.forward();
 
-    // 2. Navegar al Login después de 4 segundos
+    // Navegar al login
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        // Usamos PageRouteBuilder para una transición de desvanecimiento suave (Fade)
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (_, __, ___) => const LoginScreen(),
@@ -60,8 +58,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    // Usamos las nuevas variables del tema Velyth (background, surface, primary)
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.background, // <--- CORREGIDO
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -73,26 +72,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 opacity: _opacityAnimation,
                 child: Column(
                   children: [
-                    // Icono simulado (luego será tu logo real)
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.surfaceColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.2),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.storefront_rounded,
-                        size: 60,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
+                    
+Container(
+      padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: AppTheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.3),
+            blurRadius: 40,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      // --- AQUÍ USAMOS TU NUEVO WIDGET ---
+      child: VelythLogo(
+        size: 70, // Tamaño
+        color: AppTheme.primary, // Color verde neón automático
+      ),
+      // -----------------------------------
+    ),
                     const SizedBox(height: 30),
                     Text(
                       'EQUUSTORE',
@@ -102,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         letterSpacing: 4.0,
                         shadows: [
                           Shadow(
-                            color: AppTheme.primaryColor.withOpacity(0.6),
+                            color: AppTheme.primary.withOpacity(0.6), // <--- CORREGIDO
                             blurRadius: 30,
                             offset: const Offset(0, 0),
                           ),
@@ -123,12 +123,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 children: [
                   const LinearProgressIndicator(
                     backgroundColor: Colors.white10,
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.primary, // <--- CORREGIDO
                     minHeight: 2,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'LOADING SYSTEM MODULES...',
+                    'LOADING MODULES...',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.white30,
                       fontSize: 10,
@@ -139,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ),
             ),
             
-            const Spacer(), // Empuja el footer hacia abajo
+            const Spacer(),
             
             // --- BRANDING VELYTH ---
             Padding(
@@ -156,13 +156,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   const SizedBox(height: 8),
                   Text(
                     'VELYTH TECHNOLOGIES CORE',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: AppTheme.secondaryColor,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.accent, // <--- CORREGIDO (Antes secondaryColor)
                       letterSpacing: 3.0,
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(
-                          color: AppTheme.secondaryColor.withOpacity(0.4),
+                          color: AppTheme.accent.withOpacity(0.4), // <--- CORREGIDO
                           blurRadius: 10,
                         )
                       ]

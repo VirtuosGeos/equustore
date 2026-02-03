@@ -19,7 +19,7 @@ class CustomTitleBar extends StatelessWidget {
                   const SizedBox(width: 16),
                   // Pequeño logo en la barra
                   const Icon(Icons.storefront, 
-                      color: AppTheme.primaryColor, size: 16),
+                      color: AppTheme.primary, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     'EQUUSTORE POS',
@@ -50,10 +50,10 @@ class WindowButtons extends StatelessWidget {
     // Definimos los colores para el estado normal y hover
     final buttonColors = WindowButtonColors(
       iconNormal: Colors.white54,
-      mouseOver: AppTheme.primaryColor.withOpacity(0.1),
-      mouseDown: AppTheme.primaryColor.withOpacity(0.2),
-      iconMouseOver: AppTheme.primaryColor,
-      iconMouseDown: AppTheme.primaryColor,
+      mouseOver: AppTheme.primary.withOpacity(0.1),
+      mouseDown: AppTheme.primary.withOpacity(0.2),
+      iconMouseOver: AppTheme.primary,
+      iconMouseDown: AppTheme.primary,
     );
 
     final closeButtonColors = WindowButtonColors(
